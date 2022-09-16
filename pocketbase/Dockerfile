@@ -1,9 +1,9 @@
 FROM docker.io/bitnami/minideb:bullseye
 
 LABEL org.opencontainers.image.title="pocketbase" \
-      org.opencontainers.image.version="0.7.2"
+      org.opencontainers.image.version="0.7.3"
 
-ARG POCKETBASE_VERSION=0.7.2
+ARG POCKETBASE_VERSION=0.7.3
 ARG LITESTREAM_VERSION=0.3.9
 
 RUN install_packages curl ca-certificates unzip && \
