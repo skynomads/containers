@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
-litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db
+if [ ! -f /var/pocketbase/data.sqlite ]; then
+	litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db
+fi
 
-exec litestream replicate -exec "/usr/local/bin/pocketbase --dir /var/pocketbase/ serve --http 0.0.0.0:8080"
+exec litestream replicate -exec "pocketbase --dir /var/pocketbase/ serve --http 0.0.0.0:8080"
