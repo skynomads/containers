@@ -1,6 +1,7 @@
 dbs:
   - path: /var/pocketbase/data.db
     replicas:
-      - type: s3
+      - endpoint: ${LITESTREAM_ENDPOINT}
+        type: s3
         bucket: ${LITESTREAM_BUCKET}
         path: /db/
