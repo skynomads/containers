@@ -24,7 +24,7 @@ if [ ! -f /var/pocketbase/data.db ]; then
   curl -v -X PATCH http://localhost:8080/api/settings \
     -H 'Content-Type: application/json' \
     -H "Authorization: Admin $TOKEN" \
-    -d "{\"meta\":{\"senderAddress\":\"$POCKETBASE_SMTP_USERNAME@$POCKETBASE_SMTP_HOST\"},\"smtp\":{\"enabled\":true,\"host\":\"$POCKETBASE_SMTP_HOST\",\"port\":$POCKETBASE_SMTP_PORT,\"username\":\"$POCKETBASE_SMTP_USERNAME\",\"password\":\"$POCKETBASE_SMTP_PASSWORD\"},\"s3\":{\"enabled\":true,\"forcePathStyle\":true,\"region\":\"na\",\"bucket\":\"$POCKETBASE_S3_BUCKET\",\"endpoint\":\"$POCKETBASE_S3_ENDPOINT\",\"accessKey\":\"$POCKETBASE_S3_ACCESS_KEY\",\"secret\":\"$POCKETBASE_S3_SECRET\"}}"
+    -d "{\"meta\":{\"senderAddress\":\"$POCKETBASE_SENDER_ADDRESS\"},\"smtp\":{\"enabled\":true,\"host\":\"$POCKETBASE_SMTP_HOST\",\"port\":$POCKETBASE_SMTP_PORT,\"username\":\"$POCKETBASE_SMTP_USERNAME\",\"password\":\"$POCKETBASE_SMTP_PASSWORD\"},\"s3\":{\"enabled\":true,\"forcePathStyle\":true,\"region\":\"na\",\"bucket\":\"$POCKETBASE_S3_BUCKET\",\"endpoint\":\"$POCKETBASE_S3_ENDPOINT\",\"accessKey\":\"$POCKETBASE_S3_ACCESS_KEY\",\"secret\":\"$POCKETBASE_S3_SECRET\"}}"
 
   kill $PID
 fi
