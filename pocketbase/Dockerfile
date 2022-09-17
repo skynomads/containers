@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.title="pocketbase" \
 ARG POCKETBASE_VERSION=0.7.3
 ARG LITESTREAM_VERSION=0.3.9
 
-RUN install_packages curl ca-certificates unzip && \
+RUN install_packages curl ca-certificates unzip jq && \
     mkdir -p /var/pocketbase && chown -R 1001 /var/pocketbase && \
     curl -SsLf https://github.com/pocketbase/pocketbase/releases/download/v${POCKETBASE_VERSION}/pocketbase_${POCKETBASE_VERSION}_linux_amd64.zip -O && \
     unzip pocketbase_${POCKETBASE_VERSION}_linux_amd64.zip -d /usr/local/bin && \
