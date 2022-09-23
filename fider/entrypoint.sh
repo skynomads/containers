@@ -5,7 +5,7 @@ set -e
 
 ./fider &
 PID=$!
-until $(curl --silent http://0.0.0.0:3000/); do
+until $(curl --silent --head --fail http://0.0.0.0:3000/); do
     sleep 1
 done
 

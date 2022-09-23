@@ -6,7 +6,7 @@ litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db
 if [ ! -f /var/pocketbase/data.db ]; then
   pocketbase --dir /var/pocketbase/ serve --http 0.0.0.0:8080 &
   PID=$!
-  until $(curl --silent http://0.0.0.0:8080/_/); do
+  until $(curl --silent --head --fail http://0.0.0.0:8080/_/); do
       sleep 1
   done
 
