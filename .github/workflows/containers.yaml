@@ -11,3 +11,8 @@ jobs:
     with:
       image: pocketbase
       version: "0.7.3"
+  fider:
+    uses: ./.github/workflows/builder.yaml
+    with:
+      image: fider
+      version: "0.21.1"
