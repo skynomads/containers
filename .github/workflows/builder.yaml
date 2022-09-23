@@ -31,6 +31,9 @@ jobs:
             ghcr.io/skynomads/${{ inputs.image }}
           flavor: |
             latest=true
+          tags: |
+            type=ref,event=branch
+            type=sha
           labels: |
             org.opencontainers.image.version=${{ inputs.version }}
       - name: Build and push ${{ inputs.image }}
