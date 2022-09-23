@@ -4,6 +4,8 @@ FROM getfider/fider:${VERSION} AS origin
 
 FROM docker.io/bitnami/minideb:bullseye
 
+ARG VERSION
+
 LABEL org.opencontainers.image.title="fider" \
       org.opencontainers.image.version="${VERSION}"
 

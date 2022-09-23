@@ -1,6 +1,7 @@
-ARG VERSION=0.7.3
 
 FROM docker.io/bitnami/minideb:bullseye
+
+ARG VERSION=0.7.3
 
 LABEL org.opencontainers.image.title="pocketbase" \
       org.opencontainers.image.version="${VERSION}"
