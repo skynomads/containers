@@ -1,12 +1,16 @@
-name: build
+name: builder
 
 on:
-  push:
-    branches:
-      - main
-
+  workflow_call:
+    inputs:
+      image:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
 jobs:
-  pocketbase:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,13 +28,17 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            ghcr.io/skynomads/pocketbase
+            ghcr.io/skynomads/${{ inputs.image }}
           flavor: |
             latest=true
-      - name: Build and push pocketbase
+          labels: |
+            org.opencontainers.image.version=${{ inputs.version }}
+      - name: Build and push ${{ inputs.image }}
         uses: docker/build-push-action@v2
         with:
-          context: pocketbase
+          context: ${{ inputs.image }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }},ghcr.io/skynomads/pocketbase:${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+          tags: ${{ steps.meta.outputs.tags }},ghcr.io/skynomads/${{ inputs.image }}:${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ inputs.version }}
