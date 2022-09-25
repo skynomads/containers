@@ -6,9 +6,8 @@ litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db
 if [ ! -f /var/pocketbase/data.db ]; then
   pocketbase --dir /var/pocketbase/ serve --http 0.0.0.0:8080 &
   PID=$!
-  until $(curl --silent --head --fail http://0.0.0.0:8080/_/); do
-      sleep 1
-  done
+
+  curl --head -X GET --retry 5 --retry-connrefused --retry-delay 1 --fail http://0.0.0.0:8080/_/
 
   curl --silent -X POST http://localhost:8080/api/admins \
     -H 'Content-Type: application/json' \

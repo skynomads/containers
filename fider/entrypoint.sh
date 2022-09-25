@@ -5,9 +5,8 @@ set -e
 
 ./fider &
 PID=$!
-until $(curl --silent --head --fail http://0.0.0.0:3000/); do
-    sleep 1
-done
+
+curl --head -X GET --retry 5 --retry-connrefused --retry-delay 1 --fail http://0.0.0.0:3000/
 
 curl --silent -X POST http://localhost:3000/_api/tenants \
   -H 'Content-Type: application/json' \
