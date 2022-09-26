@@ -1,4 +1,4 @@
-name: Build container images
+name: Build and publish
 
 on:
   push:
@@ -9,6 +9,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: chainguard-dev/actions/setup-melange@main
       - uses: actions/setup-go@v3
       - name: Login to GitHub registry
