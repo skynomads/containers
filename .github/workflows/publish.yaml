@@ -28,5 +28,5 @@ jobs:
           target-folder: /packages/edge
       - name: Build and publish containers
         run: |
-          apko login --username "${{ github.repository_owner }}" --password "${{ secrets.GITHUB_TOKEN }}" ghcr.io
+          apko login -u "${{ github.repository_owner }}" -p "${{ secrets.GITHUB_TOKEN }}" ghcr.io
           sudo env "PATH=$PATH" make publish

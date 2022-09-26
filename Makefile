@@ -20,4 +20,4 @@ $(CONTAINERS): prepare
 publish: $(addprefix publish-,$(CONTAINERS))
 
 $(addprefix publish-,$(CONTAINERS)):
-	VERSION=$(shell yq '.package.version' packages/$(notdir $@:publish-%=%)); apko publish --debug --keyring-append rsa.pub $(@:publish-%=%) ghcr.io/skynomads/$(basename $(notdir $@:publish-%=%)):$$VERSION
+	VERSION=$(shell yq '.package.version' packages/$(notdir $(@:publish-%=%))); apko publish --debug --keyring-append rsa.pub $(@:publish-%=%) ghcr.io/skynomads/$(basename $(notdir $(@:publish-%=%))):$$VERSION
