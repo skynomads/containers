@@ -15,4 +15,4 @@ $(PACKAGES): prepare
 containers: $(CONTAINERS)
 
 $(CONTAINERS): prepare
-	VERSION=$(shell yq '.package.version' packages/$(notdir $@)); apko build --debug --keyring-append rsa.pub $@ $(basename $(notdir $@)):$$VERSION dist/$(@:yaml=tar)
+	VERSION=$(shell yq '.package.version' packages/$(notdir $@)); apko build --debug --keyring-append rsa.pub $@ ghcr.io/skynomads/$(basename $(notdir $@)):$$VERSION dist/$(@:yaml=tar)
