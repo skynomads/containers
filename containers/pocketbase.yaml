@@ -5,7 +5,6 @@ contents:
     - https://skynomads.github.io/containers/packages/edge
   packages:
     - alpine-base
-    - alpine-baselayout-data
     - ca-certificates-bundle
     - litestream
     - pocketbase
@@ -14,17 +13,16 @@ archs:
   - x86_64
 
 entrypoint:
-  command: /bin/sh -l
-
+  command: /usr/bin/entrypoint.sh
 
 environment:
   PATH: /usr/sbin:/sbin:/usr/bin:/bin
 
 accounts:
   groups:
-    - groupname: user
-      gid: 1000
+    - groupname: nonroot
+      gid: 65532
   users:
-    - username: user
-      uid: 1000
-  run-as: 1000
+    - username: nonroot
+      uid: 65532
+  run-as: 65532

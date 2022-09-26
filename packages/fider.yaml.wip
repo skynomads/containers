@@ -5,7 +5,7 @@ package:
   epoch: 0
   description: Open platform to collect and prioritize feedback
   target-architecture:
-    - x86_64
+    - all
   copyright:
     - paths:
       - "*"
@@ -18,13 +18,14 @@ environment:
     repositories:
       - https://dl-cdn.alpinelinux.org/alpine/edge/main
       - https://dl-cdn.alpinelinux.org/alpine/edge/community
-      #- https://packages.wolfi.dev/bootstrap/stage3
-
+      - https://packages.wolfi.dev/os
     packages:
-      - alpine-baselayout-data
+      - glibc
       - ca-certificates-bundle
       - busybox
-      - build-base
+      - make
+      - gcc
+      #- build-base
       - go
       - nodejs
 
@@ -34,7 +35,8 @@ pipeline:
       uri: https://github.com/getfider/fider/archive/refs/tags/v${{package.version}}.tar.gz
       expected-sha256: b981360d7017849e1efd0ae0970df6239a32ebdca2be35785b1208f1552fe99e
   - runs: |
-      make build
+      make build-server build-ui
       mkdir -p "${{targets.destdir}}/usr/bin" "${{targets.destdir}}/usr/share/fider"
-      cp migrations views locale favicon.png dist robots.txt ssr.js "${{targets.destdir}}/usr/share/fider"
+      cp migrations views locale favicon.png dist robots.txt ssr.js "${{targets.destdir}}/usr/bin"
+      cp fiders "${{targets.destdir}}/usr/share/fider"
   - uses: strip

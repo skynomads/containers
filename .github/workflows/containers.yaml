@@ -6,11 +6,6 @@ on:
       - main
 
 jobs:
-  pocketbase:
-    uses: ./.github/workflows/builder.yaml
-    with:
-      image: pocketbase
-      version: "0.7.6"
   fider:
     uses: ./.github/workflows/builder.yaml
     with:

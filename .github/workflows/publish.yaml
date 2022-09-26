@@ -34,8 +34,5 @@ jobs:
           target-folder: /packages/edge
       - name: Build and publish containers
         run: |
-          sudo env "PATH=$PATH" make containers
-          find ./dist/containers -type f -name "*.tar" -exec docker load --input "{}"  \;
-          for i in $(docker image list --format "{{.Repository}}" "ghcr.io/skynomads/*"); do
-            docker push --all-tags "$i"
-          done
+          apko login --username "${{ github.repository_owner }}" --password "${{ secrets.GITHUB_TOKEN }}"
+          sudo env "PATH=$PATH" make publish
