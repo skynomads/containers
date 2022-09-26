@@ -36,6 +36,6 @@ jobs:
         run: |
           sudo env "PATH=$PATH" make containers
           find ./dist/containers -type f -name "*.tar" -exec docker load --input "{}"  \;
-          for i in $(docker image list --format "{{.Repository}}"); do
+          for i in $(docker image list --format "{{.Repository}}" "ghcr.io/skynomads/*"); do
             docker push --all-tags "$i"
           done
