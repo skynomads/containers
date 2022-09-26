@@ -9,7 +9,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: chainguard-dev/actions/setup-melange@main
       - uses: actions/setup-go@v3
       - name: Login to GitHub registry
@@ -20,6 +20,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           go install chainguard.dev/apko@latest
-          make packages
-          make containers
+          sudo make packages
+          sudo make containers
+          find ./dist/containers -type f -name "*.tar" -exec docker load --input "{}"  \;
           docker push --all-tags

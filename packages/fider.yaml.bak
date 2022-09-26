@@ -3,7 +3,7 @@ package:
   name: fider
   version: 0.21.1
   epoch: 0
-  description: "Open platform to collect and prioritize feedback "
+  description: Open platform to collect and prioritize feedback
   target-architecture:
     - x86_64
   copyright:

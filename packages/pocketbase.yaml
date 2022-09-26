@@ -2,7 +2,7 @@ package:
   name: pocketbase
   version: 0.7.6
   epoch: 0
-  description: "Open Source realtime backend in 1 file "
+  description: Open Source realtime backend in 1 file
   target-architecture:
     - all
   copyright:
@@ -11,9 +11,6 @@ package:
       attestation: |
         Copyright (c) 2022, Gani Georgiev
       license: MIT
-  dependencies:
-    runtime:
-      - busybox
 
 environment:
   contents:
@@ -34,5 +31,4 @@ pipeline:
   - runs: |
       mkdir -p "${{targets.destdir}}/usr/bin"
       go build -ldflags "-s" -o "${{targets.destdir}}/usr/bin/pocketbase" ./examples/base
-#cp pocketbase "${{targets.destdir}}/usr/bin"
   - uses: strip
