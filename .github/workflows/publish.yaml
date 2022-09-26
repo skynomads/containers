@@ -21,6 +21,6 @@ jobs:
       - run: |
           go install chainguard.dev/apko@latest
           sudo make packages
-          sudo make containers
+          sudo env "PATH=$PATH" make containers
           find ./dist/containers -type f -name "*.tar" -exec docker load --input "{}"  \;
           docker push --all-tags
