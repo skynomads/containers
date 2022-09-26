@@ -7,8 +7,8 @@ contents:
     - alpine-base
     - alpine-baselayout-data
     - ca-certificates-bundle
-    - litestream@local
-    - pocketbase@local
+    - litestream
+    - pocketbase
 
 archs:
   - x86_64
