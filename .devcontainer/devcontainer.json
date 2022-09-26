@@ -1,0 +1,8 @@
+{
+	"name": "Alpine",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [ "--privileged" ],
+	"remoteUser": "vscode"
+}

@@ -1,0 +1,19 @@
+package:
+  name: pocketbase-entrypoint
+  version: 0.1.0
+  epoch: 0
+  target-architecture:
+    - all
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    packages:
+      - alpine-baselayout-data
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p "${{targets.destdir}}/usr/bin"
+      cp entrypoints/pocketbase.sh "${{targets.destdir}}/usr/bin"

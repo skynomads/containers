@@ -1,0 +1,30 @@
+contents:
+  repositories:
+    - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    - "@local /workspaces/containers/dist/packages"
+  packages:
+    - alpine-base
+    - alpine-baselayout-data
+    - ca-certificates-bundle
+    - litestream@local
+    - pocketbase@local
+
+archs:
+  - x86_64
+
+entrypoint:
+  command: /bin/sh -l
+
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin
+
+accounts:
+  groups:
+    - groupname: user
+      gid: 1000
+  users:
+    - username: user
+      uid: 1000
+  run-as: 1000

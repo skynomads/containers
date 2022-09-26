@@ -1,0 +1,38 @@
+package:
+  name: pocketbase
+  version: 0.7.6
+  epoch: 0
+  description: "Open Source realtime backend in 1 file "
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+      - "*"
+      attestation: |
+        Copyright (c) 2022, Gani Georgiev
+      license: MIT
+  dependencies:
+    runtime:
+      - busybox
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout-data
+      - ca-certificates-bundle
+      - busybox
+      - go
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/pocketbase/pocketbase/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha256: f328dc74f9804a2bdc12c523b80f8fd8d8687959a79b1b569ed1b53c1188f0ba
+  - runs: |
+      mkdir -p "${{targets.destdir}}/usr/bin"
+      go build -ldflags "-s" -o "${{targets.destdir}}/usr/bin/pocketbase" ./examples/base
+#cp pocketbase "${{targets.destdir}}/usr/bin"
+  - uses: strip
