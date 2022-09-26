@@ -9,18 +9,29 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: chainguard-dev/actions/setup-melange@main
-      - uses: actions/setup-go@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Melange
+        uses: chainguard-dev/actions/setup-melange@main
+      - name: Setup Go
+        uses: actions/setup-go@v3
       - name: Login to GitHub registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
+      - name: Build packages
+        run: |
           go install chainguard.dev/apko@latest
           sudo make packages
+      - name: Publish packages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/packages
+          target-folder: /packages/edge
+      - name: Build and publish containers
+        run: |
           sudo env "PATH=$PATH" make containers
           find ./dist/containers -type f -name "*.tar" -exec docker load --input "{}"  \;
           docker push --all-tags

@@ -2,7 +2,7 @@ contents:
   repositories:
     - https://dl-cdn.alpinelinux.org/alpine/edge/main
     - https://dl-cdn.alpinelinux.org/alpine/edge/community
-    - "@local /workspaces/containers/dist/packages"
+    - https://skynomads.github.io/containers/packages/edge
   packages:
     - alpine-base
     - alpine-baselayout-data
