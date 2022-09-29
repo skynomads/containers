@@ -16,9 +16,9 @@ package:
 environment:
   contents:
     repositories:
+      - https://packages.wolfi.dev/os
       - https://dl-cdn.alpinelinux.org/alpine/edge/main
       - https://dl-cdn.alpinelinux.org/alpine/edge/community
-      - https://packages.wolfi.dev/os
     packages:
       - glibc
       - ca-certificates-bundle
@@ -28,6 +28,7 @@ environment:
       #- build-base
       - go
       - nodejs
+      - npm
 
 pipeline:
   - uses: fetch

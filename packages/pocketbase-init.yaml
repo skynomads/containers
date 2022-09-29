@@ -1,0 +1,26 @@
+package:
+  name: pocketbase-init
+  version: 0.1.0
+  epoch: 0
+  target-architecture:
+    - all
+  dependencies:
+    runtime:
+      - common
+      - ruby-rake
+      - pocketbase
+      - litestream
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    packages:
+      - alpine-baselayout-data
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p "${{targets.destdir}}/etc"
+      cp init/pocketbase/Rakefile "${{targets.destdir}}"
+      cp init/pocketbase/litestream.yml "${{targets.destdir}}/etc"

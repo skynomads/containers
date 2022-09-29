@@ -1,0 +1,6 @@
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/MixinUsage:
+  Enabled: false
+Metrics/MethodLength:
+  Max: 30

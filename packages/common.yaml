@@ -1,0 +1,31 @@
+package:
+  name: common
+  version: 0.1.0
+  epoch: 0
+  target-architecture:
+    - all
+  dependencies:
+    runtime:
+      - ruby-rake
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    packages:
+      - alpine-baselayout-data
+      - busybox
+      - ruby
+
+pipeline:
+  - runs: |
+      cd common
+      gem build common.gemspec
+      gem install \
+        --local \
+        --install-dir "${{targets.destdir}}/$(ruby -e 'puts Gem.default_dir')" \
+        --bindir "$pkgdir/usr/bin" \
+        --ignore-dependencies \
+        --document ri \
+        --verbose \
+        common

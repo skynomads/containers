@@ -6,14 +6,13 @@ contents:
   packages:
     - alpine-base
     - ca-certificates-bundle
-    - litestream
-    - pocketbase
+    - pocketbase-init
 
 archs:
   - x86_64
 
 entrypoint:
-  command: /usr/bin/entrypoint.sh
+  command: rake
 
 environment:
   PATH: /usr/sbin:/sbin:/usr/bin:/bin

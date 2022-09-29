@@ -1,0 +1,62 @@
+require 'net/http'
+require 'dry-configurable'
+require 'common'
+
+extend Dry::Configurable
+
+setting :litestream do
+  setting :enable, default: ENV['LITESTREAM_ENABLE'] == 'true'
+  setting :accessKeyID, default: ENV['LITESTREAM_ACCESS_KEY_ID']
+  setting :secretAccessKey, default: ENV['LITESTREAM_SECRET_ACCESS_KEY']
+  setting :bucket, default: ENV['LITESTREAM_BUCKET']
+  setting :skipVerify, default: ENV['LITESTREAM_SKIP_VERIFY']
+  setting :forcePathStyle, default: ENV['LITESTREAM_FORCE_PATH_STYLE'] == 'true'
+end
+
+setting :pocketbase do
+  setting :admin do
+    setting :create, default: ENV['POCKETBASE_ADMIN_CREATE'] != 'false'
+    setting :email, default: ENV['POCKETBASE_ADMIN_EMAIL']
+    setting :password, default: ENV['POCKETBASE_ADMIN_PASSWORD']
+  end
+
+  setting :settings, default: env_to_hash('POCKETBASE_SETTINGS')
+end
+
+task default: %i[validate init start]
+
+task :validate do
+end
+
+task init: %i[install configure]
+
+task :start do
+  exec('exec litestream replicate -exec "pocketbase --dir /var/pocketbase/ serve --http 0.0.0.0:8080"')
+end
+
+task :install do
+  `litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db`
+  pb = config.pocketbase
+
+  unless File.file?('/var/pocketbase/data.db')
+    with_process 'pocketbase', '--dir ', '/var/pocketbase/', 'serve' do
+      if config.admin.create
+        data = {
+          email: pb.admin.email,
+          password: pb.admin.password,
+          passwordConfirm: pb.admin.password
+        }
+        post_json('http://localhost:8080/api/admins', data)
+
+        data = { email: pb.admin.email, password: pb.admin.password }
+        res = post_json('http://localhost:8080/api/admins/auth-via-email', data)
+
+        # TODO(?) move to configure task and write using db
+        post_json('http://localhost:8080/api/settings', pb.settings, { "Authorization": "Admin #{res.token}" })
+      end
+    end
+  end
+end
+
+task :configure do
+end
