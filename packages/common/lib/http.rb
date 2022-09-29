@@ -15,7 +15,7 @@ require 'json'
 def http_request(http, req, body = nil, retries = 5, &block)
   http.request(req, body, block)
 rescue StandardError => e
-  raise(e) unless tries.positive?
+  raise(e) unless retries.positive?
 
   retries -= 1
   sleep 1
