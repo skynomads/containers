@@ -9,6 +9,8 @@ contents:
     - busybox
     - ruby-rake
     - common
+    - litestream
+    - pocketbase
     - pocketbase-init
 
 archs:
