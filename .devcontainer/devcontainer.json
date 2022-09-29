@@ -9,8 +9,6 @@
 	"remoteUser": "vscode",
 	"extensions": [
 		"Shopify.ruby-lsp",
-		"castwide.solargraph",
-		"elves.elvish",
-		"golang.go"
+		"castwide.solargraph"
 	]
 }

@@ -20,8 +20,8 @@ environment:
 accounts:
   groups:
     - groupname: nonroot
-      gid: 65532
+      gid: 1000
   users:
     - username: nonroot
-      uid: 65532
-  run-as: 65532
+      uid: 1000
+  run-as: 1000

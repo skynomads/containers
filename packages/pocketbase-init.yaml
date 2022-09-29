@@ -1,6 +1,6 @@
 package:
   name: pocketbase-init
-  version: 0.1.0
+  version: 1
   epoch: 0
   target-architecture:
     - all
