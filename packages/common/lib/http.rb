@@ -29,7 +29,3 @@ def post_json(url, data, header = {})
   res = http_request(Net::HTTP.new(uri.host, uri.port), req)
   JSON.parse(res.body)
 end
-
-def `(command)
-  system(command, exception: true)
-end

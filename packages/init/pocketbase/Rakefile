@@ -35,7 +35,7 @@ task :start do
 end
 
 task :install do
-  `litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db`
+  sh 'litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db'
   pb = config.pocketbase
 
   unless File.file?('/var/pocketbase/data.db')
