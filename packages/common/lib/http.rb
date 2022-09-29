@@ -13,7 +13,10 @@ require 'json'
 
 # retryable version of http.request
 def http_request(http, req, body = nil, retries = 5)
-  http.request(req, body)
+  res = http.request(req, body)
+  raise StandardError.new "HTTP code #{res.code}: #{res.body}" if res.code >= 400
+
+  res
 rescue StandardError => e
   raise(e) unless retries.positive?
 

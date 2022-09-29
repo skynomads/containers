@@ -4,3 +4,5 @@ Style/MixinUsage:
   Enabled: false
 Metrics/MethodLength:
   Max: 30
+Style/RaiseArgs:
+  Enabled: false
