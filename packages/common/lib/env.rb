@@ -1,14 +1,7 @@
 def env_to_hash(prefix, delete_prefix: true)
   hash = {}
   ENV.filter { |n, _| n.start_with?(prefix) }.each do |e, value|
-    keys = e.split('_').map do |k|
-      if delete_prefix
-        k.delete_prefix(prefix).delete_prefix('_').to_sym
-      else
-        e.downcase.to_sym
-      end
-    end
-
+    keys = (delete_prefix ? e.delete_prefix(prefix).delete_prefix('_') : e).downcase.split('_')
     hash_set_nested(hash, keys, parse_env_value(value))
   end
   hash

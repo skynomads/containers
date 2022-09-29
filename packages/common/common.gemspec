@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        = 'common'
-  spec.version     = '0.1.1'
+  spec.version     = '0.1.2'
   spec.summary     = ''
   spec.authors     = ['Jakob Gillich']
   spec.files       = Dir['lib/**/*']
