@@ -22,10 +22,6 @@ pipeline:
       cd common
       gem build common.gemspec
       gem install \
-        --local \
         --install-dir "${{targets.destdir}}/$(ruby -e 'puts Gem.default_dir')" \
         --bindir "$pkgdir/usr/bin" \
-        --ignore-dependencies \
-        --document ri \
-        --verbose \
         common
