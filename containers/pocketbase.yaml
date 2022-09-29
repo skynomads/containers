@@ -30,3 +30,10 @@ accounts:
     - username: nonroot
       uid: 1000
   run-as: 1000
+
+paths:
+  - path: /var/pocketbase
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o755
