@@ -56,7 +56,7 @@ task :install do
         res = post_json('http://localhost:8080/api/admins/auth-via-email', data)
 
         # TODO(?) move to configure task and write using db
-        post_json('http://localhost:8080/api/settings', pb.settings, { "Authorization": "Admin #{res.token}" })
+        post_json('http://localhost:8080/api/settings', pb.settings, { "Authorization": "Admin #{res['token']}" })
       end
     end
   end
