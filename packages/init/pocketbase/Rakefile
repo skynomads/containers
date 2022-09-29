@@ -31,11 +31,15 @@ end
 task init: %i[install configure]
 
 task :start do
-  exec('exec litestream replicate -exec "pocketbase --dir /var/pocketbase serve --http 0.0.0.0:8080"')
+  if config.litestream.enable
+    exec('litestream replicate -exec "pocketbase --dir /var/pocketbase serve --http 0.0.0.0:8080"')
+  else
+    exec('pocketbase --dir /var/pocketbase serve --http 0.0.0.0:8080')
+  end
 end
 
 task :install do
-  sh 'litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db'
+  sh 'litestream restore -if-db-not-exists -if-replica-exists /var/pocketbase/data.db' if config.litestream.enable
   pb = config.pocketbase
 
   unless File.file?('/var/pocketbase/data.db')
