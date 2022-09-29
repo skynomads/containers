@@ -6,6 +6,9 @@ contents:
   packages:
     - alpine-base
     - ca-certificates-bundle
+    - busybox
+    - ruby-rake
+    - common
     - pocketbase-init
 
 archs:

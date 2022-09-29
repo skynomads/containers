@@ -22,6 +22,6 @@ publish: $(addprefix publish-,$(CONTAINERS))
 $(addprefix publish-,$(CONTAINERS)):
 	NAME=$(basename $(notdir $(@:publish-%=%))); \
 	VERSION=$(shell yq '.package.version' packages/$(notdir $(@:publish-%=%))); \
-	INITVER=$(shell yq '.package.version' packages/$(basename $(notdir $(@:publish-%=%)))-init.yaml); \
+	EPOCH=$(shell yq '.package.epoch' packages/$(notdir $(@:publish-%=%))); \
 		apko publish --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub $(@:publish-%=%) \
-			ghcr.io/skynomads/$$NAME:$$VERSION-$$INITVER ghcr.io/skynomads/$$NAME:$$VERSION
+			ghcr.io/skynomads/$$NAME:$$VERSION-$$EPOCH ghcr.io/skynomads/$$NAME:$$VERSION
