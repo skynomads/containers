@@ -24,4 +24,4 @@ $(addprefix publish-,$(CONTAINERS)):
 	VERSION=$(shell yq '.package.version' packages/$(notdir $(@:publish-%=%))); \
 	EPOCH=$(shell yq '.package.epoch' packages/$(notdir $(@:publish-%=%))); \
 		apko publish --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub $(@:publish-%=%) \
-			ghcr.io/skynomads/$$NAME:$$VERSION-$$EPOCH ghcr.io/skynomads/$$NAME:$$VERSION
+			ghcr.io/skynomads/$$NAME:$$VERSION-$$EPOCH ghcr.io/skynomads/$$NAME:$$VERSION ghcr.io/skynomads/$$NAME:latest
