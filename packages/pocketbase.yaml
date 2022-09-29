@@ -1,7 +1,7 @@
 package:
   name: pocketbase
   version: 0.7.6
-  epoch: 2
+  epoch: 3
   description: Open Source realtime backend in 1 file
   target-architecture:
     - all
@@ -37,6 +37,6 @@ subpackages:
   - name: pocketbase-init
     pipeline:
       - runs: |
-          mkdir -p "${{targets.subpkgdir}}/etc" "${{targets.subpkgdir}}/var/pocketbase"
+          mkdir -p "${{targets.subpkgdir}}/etc"
           cp init/pocketbase/Rakefile "${{targets.subpkgdir}}"
           cp init/pocketbase/litestream.yml "${{targets.subpkgdir}}/etc"

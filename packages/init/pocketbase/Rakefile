@@ -39,7 +39,7 @@ task :install do
   pb = config.pocketbase
 
   unless File.file?('/var/pocketbase/data.db')
-    with_process 'pocketbase', '--dir ', '/var/pocketbase', 'serve' do
+    with_process 'pocketbase', '--dir', '/var/pocketbase', 'serve' do
       if pb.admin.create
         data = {
           email: pb.admin.email,
