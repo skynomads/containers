@@ -26,11 +26,11 @@ end
 def post_json(url, data, headers = {})
   uri = URI(url)
   req = Net::HTTP::Post.new(uri.path, headers.merge(JSON_HEADERS))
-  json_request(url, req, data)
+  json_request(uri, req, data)
 end
 
 def patch_json(url, data, headers = {})
   uri = URI(url)
   req = Net::HTTP::Patch.new(uri.path, headers.merge(JSON_HEADERS))
-  json_request(url, req, data)
+  json_request(uri, req, data)
 end
