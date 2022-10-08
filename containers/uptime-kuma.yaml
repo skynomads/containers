@@ -8,8 +8,9 @@ contents:
     - ca-certificates-bundle
     - common
     - litestream
-    - pocketbase
-    - pocketbase-init
+    - uptime-kuma
+    - uptime-kuma-init
+    - ruby-rake
 
 archs:
   - x86_64
@@ -30,7 +31,7 @@ accounts:
   run-as: 1000
 
 paths:
-  - path: /var/pocketbase
+  - path: /var/uptime-kuma
     type: directory
     uid: 1000
     gid: 1000

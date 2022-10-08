@@ -1,10 +1,14 @@
-def env_to_hash(prefix, delete_prefix: true)
+def env_to_hash(prefix, delete_prefix: true, downcase: false)
   hash = {}
   ENV.filter { |n, _| n.start_with?(prefix) }.each do |e, value|
     keys = (delete_prefix ? e.delete_prefix(prefix).delete_prefix('_') : e).split('_')
     hash_set_nested(hash, keys, parse_env_value(value))
   end
-  hash
+  if downcase
+    hash.transform_keys(&:downcase)
+  else
+    hash
+  end
 end
 
 def hash_set_nested(hash, path, value)

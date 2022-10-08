@@ -1,0 +1,68 @@
+require 'dry-configurable'
+require 'pp'
+require 'common'
+require 'sqlite3'
+require 'bcrypt'
+
+extend Dry::Configurable
+
+setting :litestream do
+  setting :enable, default: ENV['LITESTREAM_ENABLE'] == 'true'
+  setting :accessKeyID, default: ENV['LITESTREAM_ACCESS_KEY_ID']
+  setting :secretAccessKey, default: ENV['LITESTREAM_SECRET_ACCESS_KEY']
+  setting :bucket, default: ENV['LITESTREAM_BUCKET']
+  setting :skipVerify, default: ENV['LITESTREAM_SKIP_VERIFY']
+  setting :forcePathStyle, default: ENV['LITESTREAM_FORCE_PATH_STYLE'] == 'true'
+end
+
+setting :admin do
+  setting :create, default: ENV['UPTIMEKUMA_ADMIN_CREATE'] == 'true'
+  setting :username, default: ENV['UPTIMEKUMA_ADMIN_USERNAME']
+  setting :password, default: ENV['UPTIMEKUMA_ADMIN_PASSWORD']
+end
+
+Dir.chdir('/usr/share/uptime-kuma/')
+
+data_dir = '/var/uptime-kuma/'
+command = "sh -c \"node server/server.js --data-dir=#{data_dir}\""
+db_file = File.join(data_dir, 'kuma.db') # config.litestream.enable ? '/tmp/kuma.db' : "#{data}/kuma.db"
+
+task default: %i[init start]
+
+task :init do
+  if config.litestream.enable
+    sh "litestream restore -if-db-not-exists -if-replica-exists #{db_file}"
+    #  File.symlink('testfile', 'link2test') if config.litestream.enable
+  end
+  next if File.file?(db_file)
+
+  with_process command do
+    Timeout.timeout(5) do
+      sleep 1 until File.file?(db_file)
+    end
+    sleep 2
+
+    db = SQLite3::Database.new(db_file)
+    if config.admin.create
+      values = [config.admin.username, BCrypt::Password.create(config.admin.password, cost: 10).to_s, 1]
+      db.execute('INSERT INTO user (username, password, active) VALUES (?, ?, ?)', values)
+      # sh "sqlite3 #{db_file} \"INSERT INTO user (username, password, active) VALUES ('#{config.admin.username}', '#{BCrypt::Password.create(
+      #   config.admin.password, cost: 10
+      # )}', 1)\""
+    end
+
+    db.close
+  end
+end
+
+task :start do
+  if config.litestream.enable
+    exec('litestream', 'replicate' '-exec', command)
+  else
+    exec(command)
+  end
+end
+
+task :debug do
+  pp config.to_h
+end

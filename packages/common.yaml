@@ -1,12 +1,13 @@
 package:
   name: common
-  version: 0.1.6
+  version: 0.1.8
   epoch: 0
   target-architecture:
     - all
   dependencies:
     runtime:
       - ruby-rake
+      - ruby-rdoc # required for irb, probably a alpine edge packaging bug
 
 environment:
   contents:
@@ -22,7 +23,4 @@ pipeline:
   - runs: |
       cd common
       gem build common.gemspec
-      gem install \
-        --install-dir "${{targets.destdir}}/$(ruby -e 'puts Gem.default_dir')" \
-        --bindir "$pkgdir/usr/bin" \
-        common
+      gem install --install-dir "${{targets.destdir}}/$(ruby -e 'puts Gem.default_dir')" common

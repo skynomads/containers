@@ -1,0 +1,8 @@
+dbs:
+  - path: /tmp/kuma.db
+    replicas:
+      - endpoint: ${LITESTREAM_ENDPOINT}
+        type: s3
+        bucket: ${LITESTREAM_BUCKET}
+        path: /db/
+        skip-verify: ${LITESTREAM_SKIP_VERIFY}

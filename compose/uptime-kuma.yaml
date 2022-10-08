@@ -1,0 +1,10 @@
+services:
+  uptime_kuma:
+    image: ghcr.io/skynomads/uptime-kuma
+    ports:
+      - 3001:3001
+    environment:
+      - UPTIMEKUMA_ADMIN_CREATE=true
+      - UPTIMEKUMA_ADMIN_USERNAME=foo
+      - UPTIMEKUMA_ADMIN_PASSWORD=foobar123
+      - NODE_ENV=development

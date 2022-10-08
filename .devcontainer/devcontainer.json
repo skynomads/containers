@@ -8,7 +8,7 @@
 	],
 	"remoteUser": "vscode",
 	"extensions": [
-		"Shopify.ruby-lsp",
-		"castwide.solargraph"
+		"castwide.solargraph",
+		"rebornix.Ruby"
 	]
 }

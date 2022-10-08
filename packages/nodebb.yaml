@@ -1,0 +1,50 @@
+package:
+  name: nodebb
+  version: 2.5.3
+  epoch: 0
+  description: Node.js based forum software built for the modern web
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+        - "*"
+      license: GPL-3.0-only
+  dependencies:
+    runtime:
+      - nodejs
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout-data
+      - ca-certificates-bundle
+      - nodejs
+      - npm
+      - git
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/NodeBB/NodeBB/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha256: 92e390d7cda190e7f098833cbbbf03fbe1c50f25653656ad589ae97dc18a7684
+      strip-components: 0
+  - runs: |
+      export NODE_ENV=production
+      mkdir -p "${{targets.destdir}}/usr/share/nodebb"
+      cd NodeBB-${{package.version}}
+      cp install/package.json .
+      npm install --omit=dev
+      cp -a ./. "${{targets.destdir}}/usr/share/nodebb"
+  - uses: strip
+
+subpackages:
+  - name: nodebb-init
+    pipeline:
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}/usr/share/nodebb"
+          cp init/nodebb/Rakefile "${{targets.subpkgdir}}"
+          cp init/nodebb/config.json "${{targets.subpkgdir}}/usr/share/nodebb"
+

@@ -1,0 +1,64 @@
+package:
+  name: uptime-kuma
+  version: 1.18.1
+  epoch: 0
+  description:  A fancy self-hosted monitoring tool
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+      - "*"
+      license: MIT
+  dependencies:
+    runtime:
+      - nodejs
+      - python3
+      - sqlite
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout-data
+      - ca-certificates-bundle
+      - nodejs
+      - npm
+      - python3
+      - py3-pip
+      # init
+      - ruby
+      - ruby-dev
+      - build-base
+      - sqlite-dev
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/louislam/uptime-kuma/archive/refs/tags/${{package.version}}.tar.gz
+      expected-sha256: 5868ebe60df865e21a572afb26ad140d2155e62c0f728985a2b8641bc17ceb38
+      strip-components: 0
+  - runs: |
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+      NODE_ENV=production
+      mkdir -p "${{targets.destdir}}/usr/share/uptime-kuma" "${{targets.destdir}}/var/uptime-kuma"
+      #cp password-hash.js uptime-kuma-${{package.version}}/server/password-hash.js
+      cd uptime-kuma-${{package.version}}
+      npm ci
+      npm run build
+      npm prune --omit=dev
+      cp -a ./. "${{targets.destdir}}/usr/share/uptime-kuma"
+      pip3 install --prefix "${{targets.destdir}}/usr" apprise==1.0.0
+  - uses: strip
+
+subpackages:
+  - name: uptime-kuma-init
+    pipeline:
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}/etc"
+          cp init/uptime-kuma/Rakefile "${{targets.subpkgdir}}"
+          cp init/uptime-kuma/litestream.yml "${{targets.subpkgdir}}/etc"
+          gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" bcrypt
+          gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" sqlite3 -- --enable-system-libraries
+      - uses: strip

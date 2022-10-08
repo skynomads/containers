@@ -1,6 +1,9 @@
 PACKAGES := $(wildcard packages/*.yaml)
 CONTAINERS := $(wildcard containers/*.yaml)
 
+# https://github.com/python/cpython/issues/78278
+export SOURCE_DATE_EPOCH=631148400
+
 .PHONY: prepare packages containers publish $(PACKAGES) $(CONTAINERS) $(addprefix publish-,$(CONTAINERS))
 
 prepare:
@@ -23,5 +26,10 @@ $(addprefix publish-,$(CONTAINERS)):
 	NAME=$(basename $(notdir $(@:publish-%=%))); \
 	VERSION=$(shell yq '.package.version' packages/$(notdir $(@:publish-%=%))); \
 	EPOCH=$(shell yq '.package.epoch' packages/$(notdir $(@:publish-%=%))); \
-		apko publish --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub $(@:publish-%=%) \
-			ghcr.io/skynomads/$$NAME:$$VERSION-$$EPOCH ghcr.io/skynomads/$$NAME:$$VERSION ghcr.io/skynomads/$$NAME:latest
+	apko publish --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub $(@:publish-%=%) \
+		ghcr.io/skynomads/$$NAME:$$VERSION-$$EPOCH ghcr.io/skynomads/$$NAME:$$VERSION ghcr.io/skynomads/$$NAME:latest
+
+$(addprefix run-,$(CONTAINERS)):
+	VERSION=$(shell yq '.package.version' packages/$(notdir $(@:run-%=%))); \
+	EPOCH=$(shell yq '.package.epoch' packages/$(notdir $(@:run-%=%))); \
+	docker load <
