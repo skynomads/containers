@@ -1,4 +1,3 @@
-# requires glibc to build
 package:
   name: fider
   version: 0.21.1
@@ -17,18 +16,18 @@ environment:
   contents:
     repositories:
       - https://packages.wolfi.dev/os
-      - https://dl-cdn.alpinelinux.org/alpine/edge/main
-      - https://dl-cdn.alpinelinux.org/alpine/edge/community
     packages:
+      - wolfi-baselayout
       - glibc
       - ca-certificates-bundle
       - busybox
       - make
       - gcc
-      #- build-base
+      - build-base
       - go
       - nodejs
-      - npm
+      - curl
+      #- npm
 
 pipeline:
   - uses: fetch
@@ -36,8 +35,10 @@ pipeline:
       uri: https://github.com/getfider/fider/archive/refs/tags/v${{package.version}}.tar.gz
       expected-sha256: b981360d7017849e1efd0ae0970df6239a32ebdca2be35785b1208f1552fe99e
   - runs: |
-      make build-server build-ui
+      curl -L https://www.npmjs.com/install.sh | sh
+      npm ci
+      make build-server build-ssr build-ui
       mkdir -p "${{targets.destdir}}/usr/bin" "${{targets.destdir}}/usr/share/fider"
-      cp migrations views locale favicon.png dist robots.txt ssr.js "${{targets.destdir}}/usr/bin"
-      cp fiders "${{targets.destdir}}/usr/share/fider"
+      cp -r migrations views locale favicon.png dist robots.txt ssr.js "${{targets.destdir}}/usr/share/fider"
+      cp fider "${{targets.destdir}}/usr/bin"
   - uses: strip

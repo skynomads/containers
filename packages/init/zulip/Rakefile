@@ -1,0 +1,43 @@
+require 'dry-configurable'
+require 'pp'
+require 'common'
+
+extend Dry::Configurable
+
+setting :zulip do
+  # setting :email, default: ENV['ZULIP_EMAIL']
+  # setting :hostname, default: ENV['ZULIP_HOSTNAME']
+  setting :database_name, default: ENV['ZULIP_DATABASE_NAME']
+  setting :database_user, default: ENV['ZULIP_DATABASE_USER']
+end
+
+task default: %i[init start]
+
+task :init do
+  # sh "/usr/share/zulip/scripts/setup/install --email=#{config.zulip.email} --hostname=#{config.zulip.hostname}"
+  sh "crudini --set /etc/zulip/zulip.conf postgresql database_name #{config.zulip.database_name}"
+  sh "crudini --set /etc/zulip/zulip.conf postgresql database_user #{config.zulip.database_user}"
+
+  # su zulip -c '/home/zulip/deployments/current/scripts/setup/initialize-database'
+  Dir.chdir('/usr/share/zulip') do
+    sh './scripts/setup/generate_secrets.py --production'
+    open('myfile.out', 'a') do |f|
+      f.puts "postgres_password = #{ENV['REMOTE_POSTGRES_PASSWORD']}"
+      f.puts "email_password =  #{ENV['EMAIL_PASSWORD']}"
+    end
+    sh './manage.py checkconfig'
+    sh './manage.py migrate --noinput'
+    sh './manage.py createcachetable third_party_api_results'
+    sh './manage.py createcachetable generate_realm_creation_link'
+  end
+end
+
+task :start do
+  Dir.chdir('/usr/share/nodebb') do
+    exec('node', '/usr/share/nodebb/nodebb', 'start')
+  end
+end
+
+task :debug do
+  pp config.to_h
+end

@@ -4,7 +4,7 @@ package:
   epoch: 0
   description: Simple forum software for building great communities
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
       - "*"
@@ -20,15 +20,18 @@ environment:
       - https://dl-cdn.alpinelinux.org/alpine/edge/main
       - https://dl-cdn.alpinelinux.org/alpine/edge/community
     packages:
-      - busybox
+      - alpine-baselayout
+      - ca-certificates-bundle
+      #- nginx-php
       - composer
 
 pipeline:
   - uses: fetch
     with:
-      uri: https://github.com/benbjohnson/litestream/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha256: c30b85679a120fba2614574f98586d693639224683d585af2c02931fd285c2f9
+      uri: https://github.com/flarum/flarum/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha256: b4d7592a7a02ba175b4d84ee3b440725633ff556dc65ee8cea21d0a759a63f4c
   - runs: |
       mkdir -p "${{targets.destdir}}/srv/flarum"
+      #cp /etc/php8/php-fpm.d/www.conf "${{targets.destdir}}/srv/flarum"
       composer create-project flarum/flarum:${{package.version}} "${{targets.destdir}}/srv/flarum" --ignore-platform-reqs
   - uses: strip

@@ -1,0 +1,36 @@
+# TODO currently requires custom PHP build https://github.com/dunglas/frankenphp/blob/main/Dockerfile
+package:
+  name: frankenphp
+  version: 0.1.0
+  epoch: 0
+  # description: ''
+  target-architecture:
+    - amd64
+  # copyright:
+  #   - paths:
+  #     - "*"
+  #     license: AGPL-3.0-only
+  dependencies:
+    runtime:
+      - php8
+      - php8-fileinfo
+      - php8-json
+      - php8-mbstring
+      - php8-openssl
+      - php8-session
+      - php8-simplexml
+      - php8-xml
+      - php8-xmlwriter
+      - php8-zlib
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout
+
+pipeline:
+  - runs: |
+      mkdir -p "${{targets.destdir}}"

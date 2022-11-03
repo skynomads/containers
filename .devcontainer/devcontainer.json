@@ -8,7 +8,6 @@
 	],
 	"remoteUser": "vscode",
 	"extensions": [
-		"castwide.solargraph",
-		"rebornix.Ruby"
+		"crystal-lang-tools.crystal-lang"
 	]
 }

@@ -4,7 +4,7 @@ package:
   epoch: 0
   description: Node.js based forum software built for the modern web
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
         - "*"
@@ -24,6 +24,8 @@ environment:
       - nodejs
       - npm
       - git
+      - shards
+      - yaml-dev
 
 pipeline:
   - uses: fetch
@@ -41,10 +43,12 @@ pipeline:
   - uses: strip
 
 subpackages:
-  - name: nodebb-init
+  - name: nodebb-entrypoint
+    dependencies:
+      runtime:
+        - yaml
     pipeline:
       - runs: |
-          mkdir -p "${{targets.subpkgdir}}/usr/share/nodebb"
-          cp init/nodebb/Rakefile "${{targets.subpkgdir}}"
-          cp init/nodebb/config.json "${{targets.subpkgdir}}/usr/share/nodebb"
-
+          mkdir -p "${{targets.subpkgdir}}/usr/bin"
+          shards install
+          crystal build --release src/entrypoint/nodebb.cr -o /usr/bin/entrypoint

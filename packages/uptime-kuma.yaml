@@ -4,7 +4,7 @@ package:
   epoch: 0
   description:  A fancy self-hosted monitoring tool
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
       - "*"
@@ -52,13 +52,13 @@ pipeline:
       pip3 install --prefix "${{targets.destdir}}/usr" apprise==1.0.0
   - uses: strip
 
-subpackages:
-  - name: uptime-kuma-init
-    pipeline:
-      - runs: |
-          mkdir -p "${{targets.subpkgdir}}/etc"
-          cp init/uptime-kuma/Rakefile "${{targets.subpkgdir}}"
-          cp init/uptime-kuma/litestream.yml "${{targets.subpkgdir}}/etc"
-          gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" bcrypt
-          gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" sqlite3 -- --enable-system-libraries
-      - uses: strip
+# subpackages:
+#   - name: uptime-kuma-init
+#     pipeline:
+#       - runs: |
+#           mkdir -p "${{targets.subpkgdir}}/etc"
+#           cp packages/init/uptime-kuma/Rakefile "${{targets.subpkgdir}}"
+#           cp packages/init/uptime-kuma/litestream.yml "${{targets.subpkgdir}}/etc"
+#           gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" bcrypt
+#           gem install --platform=ruby --install-dir "${{targets.subpkgdir}}/$(ruby -e 'puts Gem.default_dir')" sqlite3 -- --enable-system-libraries
+#       - uses: strip

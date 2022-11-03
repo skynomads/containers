@@ -6,13 +6,15 @@ contents:
   packages:
     - alpine-baselayout
     - ca-certificates-bundle
-    - pocketbase-entrypoint
+    - common
+    - zulip
+    - zulip-init
 
 archs:
   - x86_64
 
 entrypoint:
-  command: /usr/bin/entrypoint
+  command: rake
 
 environment:
   PATH: /usr/sbin:/sbin:/usr/bin:/bin
@@ -27,13 +29,8 @@ accounts:
   run-as: 1000
 
 paths:
-  - path: /var/pocketbase
+  - path: /var/zulip
     type: directory
-    uid: 1000
-    gid: 1000
-    permissions: 0o755
-  - path: /etc/litestream.yaml
-    type: empty-file
     uid: 1000
     gid: 1000
     permissions: 0o755

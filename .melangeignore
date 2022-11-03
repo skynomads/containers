@@ -1,0 +1,8 @@
+/.devcontainer
+/.github
+/.vscode
+/compose
+/containers
+/dist
+/packages
+/spec

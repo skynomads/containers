@@ -3,7 +3,7 @@ package:
   version: 0.1.8
   epoch: 0
   target-architecture:
-    - all
+    - amd64
   dependencies:
     runtime:
       - ruby-rake
@@ -21,6 +21,6 @@ environment:
 
 pipeline:
   - runs: |
-      cd common
+      cd packages/common
       gem build common.gemspec
       gem install --install-dir "${{targets.destdir}}/$(ruby -e 'puts Gem.default_dir')" common

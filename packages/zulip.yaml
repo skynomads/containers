@@ -1,0 +1,60 @@
+package:
+  name: zulip
+  version: 5.6
+  epoch: 0
+  description: Chat for distributed teams
+  target-architecture:
+    - amd64
+  copyright:
+    - paths:
+      - "*"
+      license: Apache-2.0
+  dependencies:
+    runtime:
+      - python3
+      - postgresql
+      - libldap
+      - xmlsec
+      - re2
+      - libgcc
+      - py3-pybind11
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout
+      - ca-certificates-bundle
+      - build-base
+      - python3
+      - python3-dev
+      - py3-pip
+      - py3-pybind11-dev
+      - postgresql-dev
+      - openldap-dev
+      - xmlsec-dev
+      - re2-dev
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/zulip/zulip/releases/download/${{package.version}}/zulip-server-${{package.version}}.tar.gz
+      expected-sha256: bbe58a21efa8f5600cb612ca9a2209b2176ed4678b1b2e1848a3c26542bc3247
+      strip-components: 0
+  - runs: |
+      mkdir -p "${{targets.destdir}}/usr/share"
+      mv zulip-server-${{package.version}} /usr/share/zulip
+      pip install --ignore-installed --prefix "${{targets.destdir}}/usr" -r /usr/share/zulip/requirements/prod.txt
+  - uses: strip
+
+# subpackages:
+#   - name: zulip-init
+#     pipeline:
+#       - runs: |
+#           mkdir -p "${{targets.subpkgdir}}/etc/zulip" "${{targets.subpkgdir}}/var/zulip"
+#           cp init/zulip/Rakefile "${{targets.subpkgdir}}"
+#           touch "${{targets.subpkgdir}}/var/zulip/zulip-secrets.conf" "${{targets.subpkgdir}}/var/zulip/zulip.conf"
+#           ln -s "${{targets.subpkgdir}}/var/zulip/zulip-secrets.conf "${{targets.subpkgdir}}/etc/zulip/zulip-secrets.conf"
+#           ln -s "${{targets.subpkgdir}}/var/zulip/zulip.conf "${{targets.subpkgdir}}/etc/zulip/zulip.conf"

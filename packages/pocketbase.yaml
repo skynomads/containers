@@ -1,10 +1,10 @@
 package:
   name: pocketbase
-  version: 0.7.6
-  epoch: 8
+  version: 0.7.10
+  epoch: 0
   description: Open Source realtime backend in 1 file
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
       - "*"
@@ -18,25 +18,33 @@ environment:
       - https://dl-cdn.alpinelinux.org/alpine/edge/main
       - https://dl-cdn.alpinelinux.org/alpine/edge/community
     packages:
-      - alpine-baselayout-data
+      - alpine-baselayout
       - ca-certificates-bundle
-      - busybox
       - go
+      - shards
+      - sqlite-dev
+      - yaml-dev
 
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/pocketbase/pocketbase/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha256: f328dc74f9804a2bdc12c523b80f8fd8d8687959a79b1b569ed1b53c1188f0ba
+      expected-sha256: c31f54a534e1fa0c488b1c9c09f3a5287ab3f0d1038593d3bfb91a190580eae1
   - runs: |
       mkdir -p "${{targets.destdir}}/usr/bin"
       go build -ldflags "-s" -o "${{targets.destdir}}/usr/bin/pocketbase" ./examples/base
   - uses: strip
 
 subpackages:
-  - name: pocketbase-init
+  - name: pocketbase-entrypoint
+    dependencies:
+      runtime:
+        - litestream
+        - yaml
+        - sqlite
     pipeline:
       - runs: |
-          mkdir -p "${{targets.subpkgdir}}/etc"
-          cp init/pocketbase/Rakefile "${{targets.subpkgdir}}"
-          cp init/pocketbase/litestream.yml "${{targets.subpkgdir}}/etc"
+          mkdir -p "${{targets.subpkgdir}}/usr/bin"
+          shards install
+          crystal build --release src/entrypoint/pocketbase.cr -o /usr/bin/entrypoint
+      - uses: strip

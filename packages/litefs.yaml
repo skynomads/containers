@@ -1,0 +1,35 @@
+package:
+  name: litefs
+  version: 0.2.0
+  epoch: 0
+  description:  FUSE-based file system for replicating SQLite databases across a cluster of machines
+  target-architecture:
+    - amd64
+  copyright:
+    - paths:
+      - "*"
+      license: Apache-2.0
+  dependencies:
+    runtime:
+      - fuse
+      - sqlite
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout
+      - ca-certificates-bundle
+      - go
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/superfly/litefs/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha256: a7479dd46de76f006069a3bede62dd8db074774555d7352d67ca0739fcce5e6f
+  - runs: |
+      mkdir -p "${{targets.destdir}}/usr/bin"
+      go build -ldflags "-s" -o "${{targets.destdir}}/usr/bin/litefs" ./cmd/litefs
+  - uses: strip

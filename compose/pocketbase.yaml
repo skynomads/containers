@@ -2,6 +2,7 @@ services:
   pocketbase:
     image: ghcr.io/skynomads/pocketbase
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
-      - FOO=bar
+      pocketbase_admin_email: "admin@example.com"
+      pocketbase_admin_password: "admin"

@@ -13,7 +13,7 @@ prepare:
 packages: $(PACKAGES)
 
 $(PACKAGES): prepare
-	melange build --signing-key rsa --keyring-append wolfi-signing.rsa.pub --arch x86_64 --out-dir dist/packages $@
+	melange build --source-dir . --signing-key rsa --keyring-append wolfi-signing.rsa.pub --arch x86_64 --out-dir dist/packages $@
 
 containers: $(CONTAINERS)
 

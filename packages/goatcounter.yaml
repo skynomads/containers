@@ -1,0 +1,33 @@
+package:
+  name: goatcounter
+  version: 2.2.3
+  epoch: 8
+  description: Easy web analytics. No tracking of personal data.
+  target-architecture:
+    - amd64
+  copyright:
+    - paths:
+      - "*"
+      attestation: |
+        Copyright © Martin Tournoij <martin@arp242.net>
+      license: EUPL-1.2
+
+environment:
+  contents:
+    repositories:
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      - alpine-baselayout
+      - ca-certificates-bundle
+      - go
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/arp242/goatcounter/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha256: 5b3b07afda42752d7c9600a8671bbb30e70a98c656505eda99a4e67b309a94fc
+  - runs: |
+      mkdir -p "${{targets.destdir}}/usr/bin"
+      go build -tags osusergo,netgo,sqlite_omit_load_extension -ldflags "-s -X zgo.at/goatcounter/v2.Version=${{package.version}}" -o "${{targets.destdir}}/usr/bin/goatcounter" ./cmd/goatcounter
+  - uses: strip

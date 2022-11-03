@@ -4,7 +4,7 @@ package:
   epoch: 0
   description: Streaming replication for SQLite
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
       - "*"
