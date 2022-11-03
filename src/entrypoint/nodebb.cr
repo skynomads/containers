@@ -1,9 +1,20 @@
-require "../component/litestream.cr"
-require "../component/nodebb.cr"
+require "yaml"
+require "../component/litestream"
+require "../component/nodebb"
 require "./entrypoint"
 
-class NodeBBEntrypoint < Entrypoint
-  getter components : Array(Component) = [NodeBB.new] of Component
+class Entrypoint::NodeBB < Entrypoint::Base
+  include YAML::Serializable
+
+  getter nodebb : Component::NodeBB
+
+  def components : Array(Component::Base)
+    [nodebb] of Component::Base
+  end
+
+  def exec : Array(String)
+    nodebb.command
+  end
 end
 
-NodeBBEntrypoint.new.run
+Entrypoint::NodeBB.new.run

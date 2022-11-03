@@ -2,7 +2,6 @@ contents:
   repositories:
     - https://dl-cdn.alpinelinux.org/alpine/edge/main
     - https://dl-cdn.alpinelinux.org/alpine/edge/community
-    - https://skynomads.github.io/containers/packages/edge
   packages:
     - alpine-baselayout
     - ca-certificates-bundle
@@ -13,7 +12,7 @@ contents:
     - ruby-rake
 
 archs:
-  - x86_64
+  - amd64
 
 entrypoint:
   command: rake

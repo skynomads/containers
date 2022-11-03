@@ -5,7 +5,7 @@ class Config
     hash = Hash(String, Value).new
     ENV.each do |e, value|
       next unless e.starts_with?(prefix)
-      keys = (delete_prefix ? e.lchop(prefix).lchop('_') : e).split('_')
+      keys = (delete_prefix ? e.lchop(prefix).lchop('_').lchop('_') : e).split("__")
       hash_set_nested(hash, keys, parse_env_value(value), downcase)
     end
     # if downcase

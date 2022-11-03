@@ -1,22 +1,21 @@
 require "yaml"
 require "sqlite3"
-require "./component"
+require "./base"
 
-class SQLiteDatabase < Component
+class Component::SQLite < Component::Base
   include YAML::Serializable
 
   getter path : String
-
-  getter init : SQLiteDatabase?
 
   def initialize(@path)
   end
 
   def initialized? : Bool
-    true
+    File.file?(path)
   end
 
-  def configure
+  def dir : String
+    Path[path].parent.to_s
   end
 
   def open

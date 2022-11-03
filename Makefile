@@ -13,12 +13,12 @@ prepare:
 packages: $(PACKAGES)
 
 $(PACKAGES): prepare
-	melange build --source-dir . --signing-key rsa --keyring-append wolfi-signing.rsa.pub --arch x86_64 --out-dir dist/packages $@
+	melange build --source-dir . --signing-key rsa --keyring-append https://raw.githubusercontent.com/wolfi-dev/os/main/wolfi-signing.rsa.pub --arch x86_64 --out-dir dist/packages $@
 
 containers: $(CONTAINERS)
 
 $(CONTAINERS): prepare
-	VERSION=$(shell yq '.package.version' packages/$(notdir $@)); apko build --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub $@ ghcr.io/skynomads/$(basename $(notdir $@)):$$VERSION dist/$(@:yaml=tar)
+	VERSION=$(shell yq '.package.version' packages/$(notdir $@)); apko build --debug --repository-append "$(shell pwd)/dist/packages" --keyring-append rsa.pub --keyring-append https://raw.githubusercontent.com/wolfi-dev/os/main/wolfi-signing.rsa.pub $@ ghcr.io/skynomads/$(basename $(notdir $@)):$$VERSION dist/$(@:yaml=tar)
 
 publish: $(addprefix publish-,$(CONTAINERS))
 

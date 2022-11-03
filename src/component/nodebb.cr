@@ -1,11 +1,9 @@
 require "yaml"
 require "json"
-require "./component"
+require "./base"
 
-class NodeBB < Component
+class Component::NodeBB < Component::Base
   include YAML::Serializable
-
-  getter init : NodeBB?
 
   getter url : String?
 

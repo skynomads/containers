@@ -3,12 +3,14 @@ package:
     #- packages/*.yaml
     - packages/litestream.yaml
     - packages/pocketbase.yaml
+    - packages/fider.yaml
   source: .
   target: dist/packages
 image:
   config:
     #- containers/*.yaml
     - containers/pocketbase.yaml
+    #- containers/fider.yaml
   target: dist/containers
   ref:
     nodebb: ghcr.io/skynomads/nodebb:2.5.3
@@ -17,6 +19,7 @@ image:
     zulip: ghcr.io/skynomads/zulip:5.6
 signing-key: rsa
 keyring-append:
+  - https://raw.githubusercontent.com/wolfi-dev/os/main/wolfi-signing.rsa.pub
   - rsa.pub
 env:
   # Various tools have issues with time 0

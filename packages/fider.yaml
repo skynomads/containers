@@ -4,7 +4,7 @@ package:
   epoch: 0
   description: Open platform to collect and prioritize feedback
   target-architecture:
-    - all
+    - amd64
   copyright:
     - paths:
       - "*"
@@ -42,3 +42,18 @@ pipeline:
       cp -r migrations views locale favicon.png dist robots.txt ssr.js "${{targets.destdir}}/usr/share/fider"
       cp fider "${{targets.destdir}}/usr/bin"
   - uses: strip
+
+# TODO no libyaml/crystal on wolfi
+# subpackages:
+#   - name: fider-entrypoint
+#     dependencies:
+#       runtime:
+#         - litestream
+#         - yaml
+#         - sqlite
+#     pipeline:
+#       - runs: |
+#           mkdir -p "${{targets.subpkgdir}}/usr/bin"
+#           shards install
+#           crystal build --release src/entrypoint/pocketbase.cr -o /usr/bin/entrypoint
+#       - uses: strip

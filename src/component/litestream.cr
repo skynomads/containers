@@ -1,53 +1,35 @@
 require "yaml"
-require "./component"
-require "./sqlite_database"
+require "./base"
+require "./sqlite"
+require "./s3"
 
-class Litestream < Component
+class Component::Litestream < Component::Base
   include YAML::Serializable
 
-  getter init : SQLiteDatabase?
-
-  property database : SQLiteDatabase?
-
-  getter endpoint : String?
-
-  getter bucket : String
-
-  @[YAML::Field(key: "accessKeyID")]
-  getter access_key_id : String
-
-  @[YAML::Field(key: "secretAccessKey")]
-  getter secret_access_key : String
-
-  getter bucket : String
-
-  getter path : String?
-
-  @[YAML::Field(key: "skipVerify")]
-  getter skip_verify : Bool?
-
-  @[YAML::Field(key: "forcePathStyle")]
-  getter force_path_style : Bool?
+  getter s3_path : String?
 
   def initialized? : Bool
     File.file?("/etc/litestream.yaml")
   end
 
   def configure
+    db = get_component!(SQLite).as(SQLite)
+    s3 = get_component!(S3).as(S3)
+
     File.write "/etc/litestream.yaml",
       {
         "dbs" => [
           {
-            "path"     => database.not_nil!.path,
+            "path"     => db.path,
             "replicas" => [
               {
                 "type"              => "s3",
-                "endpoint"          => endpoint,
-                "bucket"            => bucket,
-                "access-key-id"     => access_key_id,
-                "secret-access-key" => secret_access_key,
-                "path"              => path,
-                "skip-verify"       => skip_verify,
+                "endpoint"          => s3.endpoint,
+                "bucket"            => s3.bucket,
+                "access-key-id"     => s3.access_key_id,
+                "secret-access-key" => s3.secret_access_key,
+                "path"              => s3_path,
+                # "skip-verify"       => skip_verify,
               },
             ],
           },

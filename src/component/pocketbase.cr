@@ -1,11 +1,11 @@
 require "json"
 require "yaml"
 require "crypto/bcrypt"
-require "./component"
-require "./sqlite_database"
+require "./base"
+require "./sqlite"
 require "./litestream"
 
-class Pocketbase < Component
+class Component::Pocketbase < Component::Base
   include YAML::Serializable
 
   struct Admin
@@ -17,12 +17,6 @@ class Pocketbase < Component
     getter password : String
   end
 
-  getter init : Pocketbase?
-
-  getter litestream : Litestream?
-
-  getter database : SQLiteDatabase = SQLiteDatabase.new("/var/pocketbase/data.db")
-
   getter port : Int32 = 8000
 
   getter admin : Admin?
@@ -30,23 +24,19 @@ class Pocketbase < Component
   getter settings : YAML::Any?
 
   def initialized? : Bool
-    File.file?(database.path)
+    true
   end
 
   def configure
-    if litestream = @litestream
-      litestream.database = database
-      litestream.configure
-    end
-    database.configure
+    sqlite = get_component!(SQLite).as(SQLite)
 
-    Process.run("litestream", ["restore", "-if-db-not-exists", "-if-replica-exists", Path[database.path].parent.to_s])
-    Process.run("pocketbase", ["--dir", Path[database.path].parent.to_s, "serve", "--http", "0.0.0.0:#{port}"]) do |p|
+    Process.run("litestream", ["restore", "-if-db-not-exists", "-if-replica-exists", sqlite.dir])
+    Process.run("pocketbase", ["--dir", sqlite.dir, "serve", "--http", "0.0.0.0:#{port}"]) do |p|
       sleep 2
       p.terminate
     end
 
-    database.open do |db|
+    sqlite.open do |db|
       if admin = @admin
         db.exec(
           "INSERT OR REPLACE INTO _admins (email, passwordHash, id, tokenKey) VALUES (?, ?, ?, ?)",
@@ -68,11 +58,7 @@ class Pocketbase < Component
   end
 
   def command
-    cmd = ["pocketbase", "--dir", Path[database.path].parent.to_s, "serve", "--http", "0.0.0.0:#{port}"]
-    if litestream = @litestream
-      cmd = litestream.command + ["-exec", Process.quote(cmd)]
-    else
-      cmd
-    end
+    sqlite = get_component!(SQLite).as(SQLite)
+    ["pocketbase", "--dir", sqlite.dir, "serve", "--http", "0.0.0.0:#{port}"]
   end
 end

@@ -1,7 +1,22 @@
+require "yaml"
 require "option_parser"
-require "../component/component"
+require "../config"
+require "../component/base"
 
-abstract class Entrypoint
+abstract class Entrypoint::Base
+  macro inherited
+    def self.new
+      if File.exists?("/etc/#{{{ @type.stringify }}.downcase}.yaml")
+        from_yaml(File.read("/etc/#{{{ @type.stringify }}.downcase}.yaml"))
+      elsif config = ENV["CONTAINER_CONFIG"]
+        from_yaml(config)
+      else
+        hash = Config.env_to_hash({{ @type.stringify }}.downcase)
+        from_yaml(hash.to_yaml)
+      end
+    end
+  end
+
   enum Command
     Run
     Debug
@@ -10,7 +25,8 @@ abstract class Entrypoint
   @verbose : Bool = false
   @command : Command = Command::Run
 
-  abstract def components : Array(Component)
+  abstract def components : Array(Component::Base)
+  abstract def exec : Array(String)
 
   def run
     OptionParser.parse do |parser|
@@ -36,18 +52,22 @@ abstract class Entrypoint
       end
     end
 
+    components.each { |c| c.components = components }
+
     case @command
     when Command::Run
       components.each do |component|
-        if component.initialized? || component.init.nil?
+        if component.initialized?
           component.configure
         else
-          base = YAML.parse(component.to_yaml).as_h
-          init = YAML.parse(component.init.to_yaml).as_h
-          component.class.from_yaml(base.merge(init).to_json).configure
+          component.configure
+          # TODO optional separate init config
+          # base = YAML.parse(component.to_yaml).as_h
+          # init = YAML.parse(component.init.to_yaml).as_h
+          # component.class.from_yaml(base.merge(init).to_json).configure
         end
       end
-      cmd = components[0].command.not_nil!
+      cmd = exec
       Process.exec(cmd[0], cmd.skip(1))
     when Command::Debug
       components.each { |c| puts c.to_yaml }

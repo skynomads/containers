@@ -4,5 +4,5 @@ services:
     ports:
       - "8000:8000"
     environment:
-      pocketbase_admin_email: "admin@example.com"
-      pocketbase_admin_password: "admin"
+      pocketbase__admin__email: "admin@example.com"
+      pocketbase__admin__password: "admin"
